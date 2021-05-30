@@ -7,5 +7,7 @@
         public string Password { get; set; }
         public int Port { get; set; }
         public bool UseSSL { get; set; }
+        public bool UseQueue { get; set; }
+        public int MaxEmailsPerHour { get; set; }
     }
 }

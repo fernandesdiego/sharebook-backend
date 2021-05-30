@@ -74,7 +74,6 @@ namespace ShareBook.Service
                 };
                 var html = await _emailTemplate.GenerateHtmlFromTemplateAsync(BookDonatedTemplateNotifyDonor, vm);
 
-                // TODO: não enviar cópia para admins quando esse processo estiver bem amadurecido.
                 await _emailService.Send(book.User.Email, book.User.Name, html, BookDonatedTitleNotifyDonor, copyAdmins: true);
             }
         }
