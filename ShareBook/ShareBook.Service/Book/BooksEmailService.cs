@@ -115,7 +115,7 @@ namespace ShareBook.Service
                 var destinations = interestedUsers.Skip((i - 1) * MAX_DESTINATIONS).Take(MAX_DESTINATIONS).Select(u => new DestinationRequest { Name = u.Name, Email = u.Email });
                 message.Destinations = destinations.ToList();
 
-                await _AWSSQSService.SendNewBookNotifyToAWSSQSAsync(message);
+                await _AWSSQSService.SendMessageAsync(message);
             }
         }
 

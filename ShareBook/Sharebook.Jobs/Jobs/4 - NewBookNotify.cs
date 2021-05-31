@@ -35,7 +35,7 @@ namespace Sharebook.Jobs
         {
             int qtDestinations = 0;
 
-            var message = _AWSSQSService.GetNewBookNotifyFromAWSSQSAsync().Result;
+            var message = _AWSSQSService.GetMessageAsync().Result;
 
             if (message != null)
             {
@@ -48,7 +48,7 @@ namespace Sharebook.Jobs
                 }
 
                 var receiptHandle = message.ReceiptHandle;
-                _AWSSQSService.DeleteNewBookNotifyFromAWSSQSAsync(receiptHandle).Wait();
+                _AWSSQSService.DeleteMessageAsync(receiptHandle).Wait();
 
                 qtDestinations = message.Destinations.Count();
             }

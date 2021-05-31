@@ -102,7 +102,7 @@ namespace Sharebook.Jobs
                 {
                     details += "E-mail NÃO enviado para o usuário: " + donator.Name + " porque está INATIVO.";
                     continue;
-                }  
+                }
                 
                 var html = "<p>Bom dia! Aqui é o Sharebook. Vim aqui pra te ajudar a concluir a doação do seu livro.</p>";
                 html += "<p>Por favor entre no Sharebook e escolha o ganhador.</p>";

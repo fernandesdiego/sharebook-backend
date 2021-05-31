@@ -6,7 +6,7 @@ using ShareBook.Service.AWSSQS.Dto;
 using System;
 using System.Threading.Tasks;
 
-namespace ShareBook.Service.AWSSQS
+namespace ShareBook.Infra.AWSSQS
 {
     public class AWSSQSService : IAWSSQSService
     {
@@ -27,7 +27,7 @@ namespace ShareBook.Service.AWSSQS
             }
         }
 
-        public async Task DeleteNewBookNotifyFromAWSSQSAsync(string receiptHandle)
+        public async Task DeleteMessageAsync(string receiptHandle)
         {
             if (!_AWSSQSSettings.IsActive)
             {
@@ -42,7 +42,7 @@ namespace ShareBook.Service.AWSSQS
             await _amazonSQSClient.DeleteMessageAsync(deleteMessageRequest);
         }
 
-        public async Task<AWSSQSMessageNewBookNotifyResponse> GetNewBookNotifyFromAWSSQSAsync()
+        public async Task<AWSSQSMessageNewBookNotifyResponse> GetMessageAsync()
         {
             if (!_AWSSQSSettings.IsActive)
             {
@@ -66,7 +66,7 @@ namespace ShareBook.Service.AWSSQS
             }
         }
 
-        public async Task SendNewBookNotifyToAWSSQSAsync(AWSSQSMessageNewBookNotifyRequest message)
+        public async Task SendMessageAsync(AWSSQSMessageNewBookNotifyRequest message)
         {
             if (_AWSSQSSettings.IsActive)
             {
