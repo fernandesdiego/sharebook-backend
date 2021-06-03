@@ -2,13 +2,13 @@
 using Amazon.SQS;
 using Amazon.SQS.Model;
 using Microsoft.Extensions.Options;
-using ShareBook.Service.AWSSQS.Dto;
+using ShareBook.Infra.Queue.Dto;
 using System;
 using System.Threading.Tasks;
 
-namespace ShareBook.Infra.AWSSQS
+namespace ShareBook.Infra.Queue.AWSSQS
 {
-    public class AWSSQSService : IAWSSQSService
+    public class AWSSQSService : IQueue
     {
         private readonly AWSSQSSettings _AWSSQSSettings;
         private readonly AmazonSQSClient _amazonSQSClient;
@@ -42,7 +42,7 @@ namespace ShareBook.Infra.AWSSQS
             await _amazonSQSClient.DeleteMessageAsync(deleteMessageRequest);
         }
 
-        public async Task<AWSSQSMessageNewBookNotifyResponse> GetMessageAsync()
+        public async Task<Response> GetMessageAsync()
         {
             if (!_AWSSQSSettings.IsActive)
             {
@@ -56,7 +56,7 @@ namespace ShareBook.Infra.AWSSQS
             if (result.Messages.Count > 0)
             {
                 var firstMessageTemp = result.Messages[0].Body;
-                var firstMessage = System.Text.Json.JsonSerializer.Deserialize<AWSSQSMessageNewBookNotifyResponse>(firstMessageTemp);
+                var firstMessage = System.Text.Json.JsonSerializer.Deserialize<Response>(firstMessageTemp);
                 firstMessage.ReceiptHandle = result.Messages[0].ReceiptHandle;
                 return firstMessage;
             }
@@ -66,7 +66,7 @@ namespace ShareBook.Infra.AWSSQS
             }
         }
 
-        public async Task SendMessageAsync(AWSSQSMessageNewBookNotifyRequest message)
+        public async Task SendMessageAsync(Request message)
         {
             if (_AWSSQSSettings.IsActive)
             {

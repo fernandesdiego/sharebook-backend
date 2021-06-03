@@ -1,6 +1,6 @@
-﻿namespace ShareBook.Infra.AWSSQS.Dto
+﻿namespace ShareBook.Infra.Queue.Dto
 {
-    public class AWSSQSMessageNewBookNotifyResponse
+    public class Response
     {
         public string ReceiptHandle { get; set; }
         public string Subject { get; set; }

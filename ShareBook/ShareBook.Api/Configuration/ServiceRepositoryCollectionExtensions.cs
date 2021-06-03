@@ -11,7 +11,8 @@ using ShareBook.Service.Upload;
 using Sharebook.Jobs;
 using ShareBook.Service.Notification;
 using ShareBook.Service.Muambator;
-using ShareBook.Service.AWSSQS;
+using ShareBook.Infra.Queue;
+using ShareBook.Infra.Queue.AWSSQS;
 
 namespace ShareBook.Api.Configuration
 {
@@ -31,7 +32,9 @@ namespace ShareBook.Api.Configuration
             services.AddScoped<IContactUsService, ContactUsService>();
             services.AddScoped<IContactUsEmailService, ContactUsEmailService>();
             services.AddScoped<IMuambatorService, MuambatorService>();
-            services.AddSingleton<IAWSSQSService, AWSSQSService>();
+            
+            //infra
+            services.AddSingleton<IQueue, AWSSQSService>();
 
             //repositories
             services.AddScoped<IBookRepository, BookRepository>();

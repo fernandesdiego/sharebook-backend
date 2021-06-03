@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ShareBook.Infra.AWSSQS
+namespace ShareBook.Infra.Queue.AWSSQS
 {
     public class AWSSQSSettings
     {

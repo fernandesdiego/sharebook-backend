@@ -1,6 +1,6 @@
-﻿namespace ShareBook.Infra.AWSSQS.Dto
+﻿namespace ShareBook.Infra.Queue.Dto
 {
-    public class AWSSQSMessageNewBookNotifyRequest
+    public class Request
     {
         public string Subject { get; set; }
         public string BodyHTML { get; set; }
