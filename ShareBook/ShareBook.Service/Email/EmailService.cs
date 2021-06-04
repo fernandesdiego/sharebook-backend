@@ -1,10 +1,11 @@
 ﻿using MailKit.Net.Smtp;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Rollbar;
 using ShareBook.Domain;
+using ShareBook.Infra.Queue;
 using ShareBook.Repository;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,11 +15,13 @@ namespace ShareBook.Service
     {
         private readonly EmailSettings _settings;
         private readonly IUserRepository _userRepository;
+        private readonly IQueue _queue;
 
-        public EmailService(IOptions<EmailSettings> emailSettings, IUserRepository userRepository)
+        public EmailService(IOptions<EmailSettings> emailSettings, IUserRepository userRepository, IQueue queue)
         {
             _settings = emailSettings.Value;
             _userRepository = userRepository;
+            _queue = queue;
         }
 
         public async Task SendToAdmins(string messageText, string subject)
@@ -26,10 +29,20 @@ namespace ShareBook.Service
             await Send(_settings.Username, "Administradores Sharebook", messageText, subject, true);
         }
 
-        public async Task Send(string emailRecipient, string nameRecipient, string messageText, string subject)
-            => await Send(emailRecipient, nameRecipient, messageText, subject, false);
+        public async Task Send(string emailRecipient, string nameRecipient, string messageText, string subject, bool copyAdmins = false, bool highPriority = true)
+        {
+            if(_settings.UseQueue)
+                await Enqueue(emailRecipient, nameRecipient, messageText, subject, copyAdmins, highPriority);
+            else
+                await SendImmediately(emailRecipient, nameRecipient, messageText, subject, copyAdmins);            
+        }
 
-        public async Task Send(string emailRecipient, string nameRecipient, string messageText, string subject, bool copyAdmins = false)
+        private Task Enqueue(string emailRecipient, string nameRecipient, string messageText, string subject, bool copyAdmins, bool highPriority)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public async Task SendImmediately(string emailRecipient, string nameRecipient, string messageText, string subject, bool copyAdmins)
         {
             var message = FormatEmail(emailRecipient, nameRecipient, messageText, subject, copyAdmins);
             try
@@ -40,7 +53,7 @@ namespace ShareBook.Service
                     {
                         client.ServerCertificateValidationCallback = (s, c, h, e) => true;
                     }
-                    
+
                     client.Connect(_settings.HostName, _settings.Port, _settings.UseSSL);
                     client.Authenticate(_settings.Username, _settings.Password);
                     await client.SendAsync(message);
@@ -97,7 +110,7 @@ namespace ShareBook.Service
         {
             var subject = "Sharebook - teste de email";
             var message = $"<p>Olá {name},</p> <p>Esse é um email de teste para verificar se o sharebook consegue fazer contato com você. Por favor avise o facilitador quando esse email chegar. Obrigado.</p>";
-            await this.Send(email, name, message, subject);
+            await Send(email, name, message, subject);
         }
 
     }

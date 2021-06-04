@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ShareBook.Helper\ShareBook.Helper.csproj" />
+    <ProjectReference Include="..\Sharebook.Infra\Sharebook.Infra.csproj" />
     <ProjectReference Include="..\ShareBook.Repository\ShareBook.Infra.Data.csproj" />
   </ItemGroup>
 

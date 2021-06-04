@@ -1,10 +1,13 @@
-﻿namespace ShareBook.Infra.Queue.Dto
+﻿using System.Collections.Generic;
+
+namespace ShareBook.Infra.Queue.Dto
 {
     public class Request
     {
         public string Subject { get; set; }
         public string BodyHTML { get; set; }
         public Destination Destination { get; set; }
+        public IList<Destination> Copy { get; set; }
     }
 
     public class Destination
