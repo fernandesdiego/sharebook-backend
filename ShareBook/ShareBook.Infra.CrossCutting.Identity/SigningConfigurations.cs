@@ -1,5 +1,6 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System.Security.Cryptography;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ShareBook.Infra.CrossCutting.Identity
 {
@@ -8,15 +9,14 @@ namespace ShareBook.Infra.CrossCutting.Identity
         public SecurityKey Key { get; }
         public SigningCredentials SigningCredentials { get; }
 
-        public SigningConfigurations()
+        public SigningConfigurations(IConfiguration configuration)
         {
-            using (var provider = new RSACryptoServiceProvider(2048))
-            {
-                Key = new RsaSecurityKey(provider.ExportParameters(true));
-            }
+            // Token persistente a server reset. Bom para clusterização.
+            // fonte: https://balta.io/artigos/aspnet-5-autenticacao-autorizacao-bearer-jwt
 
-            SigningCredentials = new SigningCredentials(
-                Key, SecurityAlgorithms.RsaSha256Signature);
+            var keyString = configuration["TokenConfigurations:Key"];
+            Key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(keyString));
+            SigningCredentials = new SigningCredentials(Key, SecurityAlgorithms.HmacSha256Signature);
         }
     }
 }
